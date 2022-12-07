@@ -10,6 +10,8 @@
 #include <vector> //
 #include <math.h> //
 
+int choice = 1;
+
 // Colors
 GLfloat WHITE[] = { 1, 1, 1 };
 GLfloat BLACK[] = { 0, 0, 0 };
@@ -47,6 +49,22 @@ void changeSize(int w, int h)
 	// Get Back to the Modelview
 	glMatrixMode(GL_MODELVIEW);
 }
+
+class Camera {
+	double theta;      // determines the x and z positions
+	double y;          // the current y axis position
+	double dTheta;     // increment in theta for moving the camera
+	double dy;         // increment in y 
+public:
+	Camera() : theta(0), y(3), dTheta(0.04), dy(0.2) {} //The starting position of the camera
+	double getX() { return 10 * cos(theta); } //Bounds of the camera
+	double getY() { return y; }
+	double getZ() { return 10 * sin(theta); }
+	void moveRight() { theta += dTheta; } //Camera movement
+	void moveLeft() { theta -= dTheta; }
+	void moveUp() { y += dy; }
+	void moveDown() { if (y > dy) y -= dy; }
+};
 
 class Sphere {
 	double radius; // Defines the radius
@@ -175,6 +193,8 @@ public:
 
 Plane plane(15, 15);
 
+Camera camera;
+
 Sphere sphere[] = {
 	//radius, color, initial starting position on the y axis [x], positon on board[x,z]
    Sphere(1, GREEN, 1, 6, 1),
@@ -208,7 +228,12 @@ void display() {
 
 
 	// Set the camera
-	gluLookAt(x, 1.0f, z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
+	if (choice == 0) {
+		gluLookAt(x, 1.0f, z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
+	}
+	if (choice == 1) {
+		gluLookAt(camera.getX(), camera.getY(), camera.getZ(), plane.centerx(), 0.0, plane.centerz(), 0.0, 1.0, 0.0);
+	}
 
 	// Draw ground
 	plane.draw();
@@ -227,6 +252,27 @@ void display() {
 	glFlush();
 	glutSwapBuffers();
 }
+
+void reshape(GLint w, GLint h) {
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(40.0, GLfloat(w) / GLfloat(h), 1.0, 150.0);
+	glMatrixMode(GL_MODELVIEW);
+}
+
+
+
+void special(int key, int, int) {
+	switch (key) {
+	case GLUT_KEY_RIGHT: camera.moveLeft(); break;
+	case GLUT_KEY_LEFT: camera.moveRight(); break;
+	case GLUT_KEY_UP: camera.moveUp(); break;
+	case GLUT_KEY_DOWN: camera.moveDown(); break;
+	}
+	glutPostRedisplay();
+}
+
 
 
 void processSpecialKeys(int key, int xx, int yy)
@@ -275,6 +321,21 @@ void keyboard_func(unsigned char key, int xx, int yy)
 		z -= lz * fraction;
 		break;
 	}
+	case ' ':
+	{
+		if (choice == 0) {
+			choice++;
+			glutReshapeFunc(reshape);
+			glutSpecialFunc(special);
+			break;
+		}
+
+		if (choice == 1) {
+			choice = 0;
+			glutSpecialFunc(processSpecialKeys);
+			break;
+		}
+	}
 
 	}
 }
@@ -289,7 +350,16 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(display);
 	glutReshapeFunc(changeSize);
 	glutIdleFunc(display);
-	glutSpecialFunc(processSpecialKeys);
+
+	if (choice == 0) {
+		glutSpecialFunc(processSpecialKeys);
+	}
+
+	if (choice == 1) {
+		glutReshapeFunc(reshape);
+		glutSpecialFunc(special);
+	}
+
 	glutKeyboardFunc(keyboard_func);
 	// OpenGL init
 	glEnable(GL_DEPTH_TEST);
@@ -297,4 +367,3 @@ int main(int argc, char** argv) {
 	glutMainLoop();
 
 }
-
