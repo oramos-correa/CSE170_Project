@@ -11,15 +11,19 @@
 #include <math.h> //
 
 int choice = 1;
+int night = 0;
 
 // Colors
 GLfloat WHITE[] = { 1, 1, 1 };
+GLfloat GREY[] = { 0.5, 0.5, 0.5 };
 GLfloat BLACK[] = { 0, 0, 0 };
 GLfloat YELLOW[] = { 1, 1, 0 };
 GLfloat CYAN[] = { 0, 1, 1 };
 GLfloat RED[] = { 1, 0, 0 };
 GLfloat GREEN[] = { 0, 1, 0 };
 GLfloat MAGENTA[] = { 1, 0, 1 };
+GLfloat ORANGE[] = { 1, 0.5, 0 };
+GLfloat SILVER[] = { 0.90, 0.91, 0.98 };
 
 // actual vector representing the camera's direction
 float lx = 0.0f, lz = -1.0f;
@@ -79,15 +83,19 @@ public:
 		radius(r), color(c), maximumHeight(h), direction(-1), y(h), x(x), z(z) {
 	}
 
-	void update() { //method
+	void update() {
+		y += direction * 0.005;
+		if (y > maximumHeight) {
+			y = maximumHeight; direction = -1;
+		}
+		else if (y < radius) {
+			y = radius; direction = 1;
+		}
 		glPushMatrix();
-		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color); // Color and shading
-		//glColor3ub(color[0], color[1], color[2]);
+		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
 		glTranslated(x, y, z);
-		//glutSolidSphere(radius, 30, 30);
-		glutWireSphere(radius, 30, 30);
+		glutSolidSphere(radius, 30, 30);
 		glPopMatrix();
-
 	}
 
 	~Sphere() {}; //destructor
@@ -166,15 +174,14 @@ public:
 	void create() {
 		displayListId = glGenLists(1);
 		glNewList(displayListId, GL_COMPILE);
-		//GLfloat lightPosition[] = { 4, 3, 7, 1 };
-		//glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-
+		GLfloat lightPosition[] = { 4, 3, 7, 1 };
+		glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
 		glBegin(GL_QUADS);
 		glNormal3d(0, 1, 0); //Shader of plane
 		for (int x = 0; x < width - 1; x++) {
 			for (int z = 0; z < depth - 1; z++) { //Dimensions of the plane [Plane gets weird if parameters are changed here]
-				glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, WHITE); //Color of plane
+				glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, SILVER); //Color of plane
 				glVertex3d(x, 0, z);
 				glVertex3d(x + 1, 0, z);
 				glVertex3d(x + 1, 0, z + 1);
@@ -191,19 +198,21 @@ public:
 
 
 
-Plane plane(15, 15);
+Plane plane(12, 12);
 
 Camera camera;
 
 Sphere sphere[] = {
 	//radius, color, initial starting position on the y axis [x], positon on board[x,z]
-   Sphere(1, GREEN, 1, 6, 1),
+   Sphere(1, GREEN, 10, 6, 1),
    Sphere(0.4, CYAN, 0.4, 1, 7)
 };
 
 Cube cube[] = {
 	//size, initial starting position on the y axis [x], positon on board[x,z]
-  Cube(1.5, MAGENTA, 1.5 / 2, 3, 4)
+  Cube(1.5, MAGENTA, 1.5 / 2, 3, 4),
+  Cube(2, ORANGE, 10, 6, 1),
+  Cube(2, ORANGE,  -0.9, 6, 1)
 };
 
 Cylinder cylinder[] = {
@@ -215,9 +224,15 @@ void init() {
 
 	glClearColor(0.1, 0.39, 0.88, 1.0); //Changes color of background
 
+
 	glEnable(GL_DEPTH_TEST); //Objects will clip in cameras view if disabled
 	glEnable(GL_LIGHTING); //Everything turns pure white if disabled
 	glEnable(GL_LIGHT0); //Everything turns pure dark if disabled
+
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, WHITE);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, WHITE);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, WHITE);
+	glMaterialf(GL_FRONT, GL_SHININESS, 30);
 
 	plane.create();
 }
@@ -259,6 +274,11 @@ void reshape(GLint w, GLint h) {
 	glLoadIdentity();
 	gluPerspective(40.0, GLfloat(w) / GLfloat(h), 1.0, 150.0);
 	glMatrixMode(GL_MODELVIEW);
+}
+
+void timer(int v) {
+	glutPostRedisplay();
+	glutTimerFunc(1000 / 60, timer, v);
 }
 
 
@@ -337,6 +357,20 @@ void keyboard_func(unsigned char key, int xx, int yy)
 		}
 	}
 
+	case 'n':
+	{
+		if (night == 0) {
+			glEnable(GL_LIGHT0);
+			night++;
+			break;
+		}
+		if (night == 1) {
+			glDisable(GL_LIGHT0);
+			night = 0;
+			break;
+		}
+	}
+
 	}
 }
 
@@ -350,16 +384,10 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(display);
 	glutReshapeFunc(changeSize);
 	glutIdleFunc(display);
-
-	if (choice == 0) {
-		glutSpecialFunc(processSpecialKeys);
-	}
-
-	if (choice == 1) {
-		glutReshapeFunc(reshape);
-		glutSpecialFunc(special);
-	}
-
+	glutSpecialFunc(processSpecialKeys);
+	glutReshapeFunc(reshape);
+	glutSpecialFunc(special);
+	glutTimerFunc(100, timer, 0);
 	glutKeyboardFunc(keyboard_func);
 	// OpenGL init
 	glEnable(GL_DEPTH_TEST);
