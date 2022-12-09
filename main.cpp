@@ -53,29 +53,40 @@ Camera camera;
 
 Sphere sphere[] = {
 	//radius, color, initial starting position on the y axis [x], positon on board[x,z]
-   Sphere(0.25, ORANGE, 5, 7.5, 7.5),
-   Sphere(0.25, BLACK, 5, 7.5, 7.5)
+   Sphere(0.3, ORANGE, 6, 7.5, 1.5)
+   //Sphere(0.3, BLACK, 5, 7.5, 7.5)
 };
 
 Cube cube[] = {
 	//size, initial starting position on the y axis [x], positon on board[x,z]
   Cube(2, BLACK,  -0.9, 7.5, 7.5),
-  Cube(15, ORANGE,  -6.8, 7.5, 7.5),
+  Cube(14.9, ORANGE,  -6.93, 7.5, 7.5),
   Cube(2,BLACK,5,7.5,0),
   Cube(40, BLACK,-19.5,20,20),
   Cube(15, BROWN,-6.8,8,32)
+  //
 };
 
 Cylinder cylinder[] = {
 	//radius, size, color, initial starting position on the y axis [x], positon on board[x,z]
   Cylinder(0.8, 15, YELLOW, 0, 14.9, 0),
   Cylinder(0.8, 15, BROWN, 0, 0, 0),
-  Cylinder(10, 0.4, RED, 0, 7.5, 0)
+  Cylinder(10, 0.4, RED, 0, 7.5, 0.1)
+  //
 };
 
+//======Down facing torus=====
 Torus torus[] = {
 	//radius 1, radius 2, color, initial starting position on the y axis [x], positon on board[x,z]
-   Torus(0.2, 1, GREY, 5, 7.5, 1)
+   Torus(0.15, 0.8, GREY, 4.5, 7.5, 1.5)
+   //
+};
+
+//=======Front facing torus=====
+Torus2 torus2[] = {
+	//radius 1, radius 2, color, initial starting position on the y axis [x], positon on board[x,z]
+   Torus2(0.2, .5, WHITE, 5.2, 7.5, .82)
+   //
 };
 
 /*
@@ -88,12 +99,12 @@ Cone cone[] = {
 	//color, initial starting position on the y axis [x], positon on board[x,z] 
 	Cone(1,1,ORANGE, 0, 2, -4)
 };
-
+*/
 Rect rect[] = {
 	//width, height, depth, color, initial starting position on the y axis [x], positon on board[x,z] 
-	Rect(5,2,3,ORANGE, 1.5/2, -2, 4)
+	Rect(8,12,6,RED, 1.5/2, 5, 36)
 };
-*/
+
 
 
 void init() {
@@ -139,6 +150,9 @@ void display() {
 	for (int i = 0; i < sizeof torus / sizeof(Torus); i++) {
 		torus[i].update();
 	}
+	for (int i = 0; i < sizeof torus2 / sizeof(Torus2); i++) {
+		torus2[i].update();
+	}
 	for (int i = 0; i < sizeof cube / sizeof(Cube); i++) {
 		cube[i].update();
 	}
@@ -152,10 +166,11 @@ void display() {
 	for (int i = 0; i < sizeof cone / sizeof(Cone); i++) {
 		cone[i].update();
 	}
+	*/
 	for (int i = 0; i < sizeof rect / sizeof(Rect); i++) {
 		rect[i].update();
 	}
-	*/
+	
 
 	glFlush();
 	glutSwapBuffers();

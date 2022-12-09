@@ -31,6 +31,7 @@ GLfloat GREEN[] = { 0, 1, 0 };
 GLfloat MAGENTA[] = { 1, 0, 1 };
 GLfloat ORANGE[] = { 1, 0.5, 0 };
 GLfloat SILVER[] = { 0.90, 0.91, 0.98 };
+GLfloat BROWN[] = { 0.5, 0.35, 0.05 };
 
 
 class Camera {
@@ -90,8 +91,6 @@ public:
 
 
 
-
-
 class Sphere {
 	double radius; // Defines the radius
 	GLfloat* color; //Dynamically assigns the color
@@ -124,6 +123,8 @@ public:
 
 };
 
+
+//======Down facing torus=====
 class Torus {
 	double radius; // Defines the radius
 	double r;
@@ -139,13 +140,37 @@ public:
 	}
 
 	void update() {
-		y += direction * 0.005;
-		if (y > maximumHeight) {
-			y = maximumHeight; direction = -1;
-		}
-		else if (y < radius) {
-			y = radius; direction = 1;
-		}
+
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
+		glTranslated(x, y, z);
+		glRotatef(90.0, 1.0, 0.0, 0.0);
+		glutSolidTorus(radius, r, 30, 30);
+		glPopMatrix();
+	}
+
+	~Torus() {}; //destructor
+
+};
+
+
+//=======Front facing torus=====
+class Torus2 {
+	double radius; // Defines the radius
+	double r;
+	GLfloat* color; //Dynamically assigns the color
+	double maximumHeight; //Defines the maximum height
+	double x; //x
+	double y; //y
+	double z; //z
+	int direction; // direction
+public:
+	Torus2(double r, double R, GLfloat* c, double h, double x, double z) : //constructor
+		radius(r), r(R), color(c), maximumHeight(h), direction(-1), y(h), x(x), z(z) {
+	}
+
+	void update() {
+
 		glPushMatrix();
 		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
 		glTranslated(x, y, z);
@@ -153,7 +178,7 @@ public:
 		glPopMatrix();
 	}
 
-	~Torus() {}; //destructor
+	~Torus2() {}; //destructor
 
 };
 
@@ -188,7 +213,7 @@ public:
 
 };
 
-//Cylinder Class
+//=======Front facing Cylinder=====
 class Cylinder {
 	double radius;
 	double leSize; // Defines the radius
@@ -207,7 +232,8 @@ public:
 
 		glPushMatrix();
 		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
-		//glColor3ub(color[0], color[1], color[2]);
+		
+		//glRotatef(90.0, 1.0, 0.0, 0.0);
 		glTranslated(x, y, z);
 		glutSolidCylinder(radius, leSize, 30, 30);
 		glPopMatrix();
@@ -215,6 +241,37 @@ public:
 	}
 
 	~Cylinder() {};
+
+};
+
+//=======Down facing Cylinder=====
+class Cylinder2 {
+	double radius;
+	double leSize; // Defines the radius
+	GLfloat* color; //Dynamically assigns the color
+	double maximumHeight; //Defines the maximum height
+	double x; //x
+	double y; //y
+	double z; //z
+	int direction; // direction
+public:
+	Cylinder2(double r, double s, GLfloat* c, double h, double x, double z) :
+		radius(r), leSize(s), color(c), maximumHeight(h), direction(-1), y(h), x(x), z(z) {
+	}
+
+	void update() {
+
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
+
+		glRotatef(90.0, 1.0, 0.0, 0.0);
+		glTranslated(x, y, z);
+		glutSolidCylinder(radius, leSize, 30, 30);
+		glPopMatrix();
+
+	}
+
+	~Cylinder2() {};
 
 };
 
@@ -270,6 +327,7 @@ public:
 		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
 
 		glTranslated(x, y, z);
+		glRotatef(-90.0, 1.0, 0.0, 0.0);
 		glutSolidCone(base, leSize, 30, 30);
 		glPopMatrix();
 	}
