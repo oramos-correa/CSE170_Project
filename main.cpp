@@ -256,7 +256,10 @@ Cube cube[] = {
   Cube(15, ORANGE,  -6.8, 7.5, 7.5),
   Cube(2,BLACK,5,7.5,0),
   Cube(40, BLACK,-19.5,20,20),
-  Cube(15, BROWN,-6.8,8,32)
+  Cube(15, BROWN,-6.8,8,32),
+  Cube(15,WHITE,-6.8,32,8),
+  Cube(15,WHITE,-6.8,32,32)
+
 };
 
 Cylinder cylinder[] = {
