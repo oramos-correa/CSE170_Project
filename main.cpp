@@ -103,6 +103,39 @@ public:
 
 };
 
+class Torus {
+	double radius; // Defines the radius
+	double r;
+	GLfloat* color; //Dynamically assigns the color
+	double maximumHeight; //Defines the maximum height
+	double x; //x
+	double y; //y
+	double z; //z
+	int direction; // direction
+public:
+	Torus(double r, double R, GLfloat* c, double h, double x, double z) : //constructor
+		radius(r), r(R), color(c), maximumHeight(h), direction(-1), y(h), x(x), z(z) {
+	}
+
+	void update() {
+		//y += direction * 0.005;
+		//if (y > maximumHeight) {
+		//	y = maximumHeight; //direction = -1;
+		//}
+		//else if (y < radius) {
+		//	y = radius; direction = 1;
+		//}
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
+		glTranslated(x, y, z);
+		glutSolidTorus(radius, r, 30, 30);
+		glPopMatrix();
+	}
+
+	~Torus() {}; //destructor
+
+};
+
 #define red {0xff, 0x00, 0x00}
 #define yellow {0xff, 0xff, 0x00}
 #define magenta {0xff, 0, 0xff}
@@ -207,27 +240,35 @@ public:
 
 
 
-Plane plane(12, 12);
+Plane plane(40, 40);
 
 Camera camera;
 
 Sphere sphere[] = {
 	//radius, color, initial starting position on the y axis [x], positon on board[x,z]
-   Sphere(1, WHITE, 10, 6, 1),
-   Sphere(0.4, BLACK, 0.4, 1, 7),
-   Sphere(0.2,SILVER,5,1, 5)
+   Sphere(0.25, ORANGE, 5, 7.5, 7.5),
+   Sphere(0.25, BLACK, 5, 7.5, 7.5)
 };
 
 Cube cube[] = {
 	//size, initial starting position on the y axis [x], positon on board[x,z]
-  Cube(1.5, BROWN, 1.5 / 2, 3, 4),
-  Cube(2, ORANGE, 10, 6, 1),
-  Cube(2, ORANGE,  -0.9, 6, 1)
+  Cube(2, BLACK,  -0.9, 7.5, 7.5),
+  Cube(15, ORANGE,  -6.8, 7.5, 7.5),
+  Cube(2,BLACK,5,7.5,0),
+  Cube(40, BLACK,-19.5,20,20),
+  Cube(15, BROWN,-6.8,8,32)
 };
 
 Cylinder cylinder[] = {
 	//radius, size, color, initial starting position on the y axis [x], positon on board[x,z]
-  Cylinder(1.5, 2, YELLOW, 1.5, 6, 6)
+  Cylinder(0.8, 15, YELLOW, 0, 14.9, 0),
+  Cylinder(0.8, 15, BROWN, 0, 0, 0),
+  Cylinder(10, 0.4, RED, 0, 7.5, 0)
+};
+
+Torus torus[] = {
+	//radius 1, radius 2, color, initial starting position on the y axis [x], positon on board[x,z]
+   Torus(0.2, 1, GREY, 5, 7.5, 1)
 };
 
 void init() {
@@ -260,7 +301,7 @@ void display() {
 		gluLookAt(camera.getX(), camera.getY(), camera.getZ(), plane.centerx(), 0.0, plane.centerz(), 0.0, 1.0, 0.0);
 	}
 	if (choice == 2) {
-		gluLookAt(x, 10.0f, z, x + lx, 1.0f, z + lz, 0.0f,1.0f, 0.0f);
+		gluLookAt(x, 75.0f, z, x + lx, 1.0f, z + lz, 0.0f,1.0f, 0.0f);
 	}
 
 	// Draw ground
@@ -275,6 +316,9 @@ void display() {
 	}
 	for (int i = 0; i < sizeof cylinder / sizeof(Cylinder); i++) {
 		cylinder[i].update();
+	}
+	for (int i = 0; i < sizeof torus / sizeof(Torus); i++) {
+		torus[i].update();
 	}
 
 	glFlush();
