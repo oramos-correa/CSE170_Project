@@ -13,6 +13,13 @@
 
 int bounds = 10;
 
+void wireBox(double width, double height, double depth) {
+	glPushMatrix();
+	glScalef(width, height, depth);
+	glutSolidCube(1.0);
+	glPopMatrix();
+}
+
 // Colors
 GLfloat WHITE[] = { 1, 1, 1 };
 GLfloat GREY[] = { 0.5, 0.5, 0.5 };
@@ -265,9 +272,42 @@ public:
 		glTranslated(x, y, z);
 		glutSolidCone(base, leSize, 30, 30);
 		glPopMatrix();
-
 	}
 
 	~Cone() {};
 
 };
+
+class Rect {
+	double S1;
+	double S2;
+	double S3;
+	GLfloat* color; //Dynamically assigns the color
+	double maximumHeight; //Defines the maximum height
+	double x; //x
+	double y; //y
+	double z; //z
+	int direction; // direction
+public:
+	Rect(double s, double ss, double sss, GLfloat* c, double h, double x, double z) :
+		S1(s), S2(ss), S3(sss), color(c), maximumHeight(h), direction(-1), y(h), x(x), z(z) {
+	}
+
+	void update() {
+
+		glPushMatrix();
+		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
+		//glColor3ub(color[0], color[1], color[2]);
+		glTranslated(x, y, z);
+		wireBox(S1, S2, S3);
+		//glutSolidCube(S1);
+
+		glPopMatrix();
+
+	}
+
+	~Rect() {};
+
+};
+
+

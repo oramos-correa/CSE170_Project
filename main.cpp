@@ -81,8 +81,14 @@ Pyramid pyramid[] = {
 
 Cone cone[] = {
 	//color, initial starting position on the y axis [x], positon on board[x,z] 
-	Cone(1,1,ORANGE, 0, 2, 4)
+	Cone(1,1,ORANGE, 0, 2, -4)
 };
+
+Rect rect[] = {
+	//width, height, depth, color, initial starting position on the y axis [x], positon on board[x,z] 
+	Rect(5,2,3,ORANGE, 1.5/2, -2, 4)
+};
+
 
 void init() {
 
@@ -135,6 +141,9 @@ void display() {
 	}
 	for (int i = 0; i < sizeof cone / sizeof(Cone); i++) {
 		cone[i].update();
+	}
+	for (int i = 0; i < sizeof rect / sizeof(Rect); i++) {
+		rect[i].update();
 	}
 
 	glFlush();
