@@ -46,6 +46,7 @@ Sphere sphere[] = {
    Sphere(0.3, BLACK, 2, 4, 9),
    Sphere(0.3, CYAN, 5, 8, 3),
    Sphere(0.3, MAGENTA, 4, 8, 10),
+   Sphere(0.4, MAGENTA, 0.4, 38, 28),
    //Sphere(0.3, BLACK, 5, 7.5, 7.5)
 };
 
@@ -163,8 +164,8 @@ Rect rect[] = {
 	Rect(3,3,2,ORANGE,1,38,30),
 	Rect(6,2,2,YELLOW,1,35,36),
 
-	Rect(2,1,6,RED,4,32,12),
-	Rect(6,1,2,RED,4,32,12),
+	Rect(2,1,6,RED,1,32,12),
+	Rect(6,1,2,RED,1,32,12),
 
 	Rect(0.3,2,0.5, RED,6.2,5,32.8), /////////
 	Rect(4,4,2, WHITE,2.5,5,33.85),
@@ -216,6 +217,11 @@ void init() {
 	std::cout << "Press 'o' and 'p' to change the orbit of the two spheres " << std::endl;
 }
 
+float angle2 = 0.0f;
+float lx2 = 0.788119f, ly2 = 2.02862e-32f, lz2 = -1.2804f;
+// XZ position of the camera
+float x2 = 39.4179f, y2 = 3.19189f, z2 = 12.7503f;
+
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -232,7 +238,8 @@ void display() {
 		gluLookAt(x, 75.0f, z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
 	}
 	if (choice == 3) { //Poke out
-		gluLookAt(camera.getX(), camera.getY(), camera.getZ(), x + lx, 1.0f, z + lz, 1.0f, 1.0f, 1.0f);
+		//gluLookAt(camera.getX(), camera.getY(), camera.getZ(), x + lx, 1.0f, z + lz, 1.0f, 1.0f, 1.0f);
+		gluLookAt(x2, y2, z2, lx2, ly2, lz2, 0.0f, 1.0f, 0.0f);
 	}
 
 
@@ -297,25 +304,65 @@ void processSpecialKeys(int key, int xx, int yy)
 
 	float fraction = 0.1f;
 
-	switch (key) {
-	case GLUT_KEY_LEFT:
-		angle -= 0.05f;
-		lx = sin(angle);
-		lz = -cos(angle);
-		break;
-	case GLUT_KEY_RIGHT:
-		angle += 0.05f;
-		lx = sin(angle);
-		lz = -cos(angle);
-		break;
-	case GLUT_KEY_UP:
-		x += lx * fraction;
-		z += lz * fraction;
-		break;
-	case GLUT_KEY_DOWN:
-		x -= lx * fraction;
-		z -= lz * fraction;
-		break;
+	if (choice != 3)
+	{
+		switch (key) {
+		case GLUT_KEY_LEFT:
+			angle -= 0.05f;
+			lx = sin(angle);
+			lz = -cos(angle);
+			break;
+		case GLUT_KEY_RIGHT:
+			angle += 0.05f;
+			lx = sin(angle);
+			lz = -cos(angle);
+			break;
+		case GLUT_KEY_UP:
+			x += lx * fraction;
+			z += lz * fraction;
+			break;
+		case GLUT_KEY_DOWN:
+			x -= lx * fraction;
+			z -= lz * fraction;
+			break;
+		}
+	}
+	else
+	{
+		switch (key) {
+		case GLUT_KEY_LEFT:
+			//angle -= 0.05f;
+			//lx = sin(angle);
+			//lz = -cos(angle);
+			x2 -= lx2 * fraction;
+			y2 -= ly2 * fraction;
+			z2 -= lz2 * fraction;
+			break;
+		case GLUT_KEY_RIGHT:
+			angle2 += 0.05f;
+			//lx = sin(angle);
+			//lz = -cos(angle);
+			x2 += lx2 * fraction;
+			y2 += ly2 * fraction;
+			z2 += lz2 * fraction;
+			break;
+		case GLUT_KEY_UP:
+			angle2 += 0.05f;
+			lx2 = sin(angle2);
+			ly2 += ly2 * .5;
+			lz2 = tan(angle2);
+			//x += lx * fraction;
+			//z += lz * fraction;
+			break;
+		case GLUT_KEY_DOWN:
+			angle2 -= 0.05f;
+			lx2 = sin(angle2);
+			ly2 -= ly2 * .5;
+			lz2 = tan(angle2);
+			//x -= lx * fraction;
+			//z -= lz * fraction;
+			break;
+		}
 	}
 }
 
