@@ -1,4 +1,3 @@
-
 #include "Objects.h"
 
 int choice = 1;
@@ -42,7 +41,11 @@ Camera camera;
 
 Sphere sphere[] = {
 	//radius, color, initial starting position on the y axis [x], positon on board[x,z]
-   Sphere(0.3, ORANGE, 6, 7.5, 1.5)
+   Sphere(0.3, ORANGE, 6, 7.5, 1.5),
+   Sphere(0.3, GREEN, 3, 3, 5),
+   Sphere(0.3, BLACK, 2, 4, 9),
+   Sphere(0.3, CYAN, 5, 8, 3),
+   Sphere(0.3, MAGENTA, 4, 8, 10),
    //Sphere(0.3, BLACK, 5, 7.5, 7.5)
 };
 
@@ -54,8 +57,10 @@ Cube cube[] = {
   Cube(40, BLACK,-19.5,20,20),
   Cube(15, BROWN,-6.93,8,32),
   Cube(15, WHITE,-6.93,32,32),
-  Cube(15, GREEN,-6.93,32,8)
+  Cube(15, GREEN,-6.93,32,8),
   //
+  Cube(2, WHITE,6.2,5,33.85),/////////
+  Cube(1.5, RED,6.2,5,33.5), /////////
 };
 
 Cylinder cylinder[] = {
@@ -70,7 +75,8 @@ Cylinder cylinder[] = {
 //======Down facing torus=====
 Torus torus[] = {
 	//radius 1, radius 2, color, initial starting position on the y axis [x], positon on board[x,z]
-   Torus(0.15, 0.8, GREY, 4.5, 7.5, 1.5)
+   Torus(0.15, 0.8, GREY, 4.5, 7.5, 1.5),
+   Torus(.2, .75,WHITE,.5,27,35)
    //
 };
 
@@ -81,23 +87,106 @@ Torus2 torus2[] = {
    //
 };
 
-/*
-Pyramid pyramid[] = {
-	//color, initial starting position on the y axis [x], positon on board[x,z] 
-	Pyramid(YELLOW, 0, 2, 4)
-};
+
+//Pyramid pyramid[] = {
+//	//color, initial starting position on the y axis [x], positon on board[x,z]
+//	Pyramid(YELLOW, 3, 2, 15)
+//};
 
 Cone cone[] = {
-	//color, initial starting position on the y axis [x], positon on board[x,z] 
-	Cone(1,1,ORANGE, 0, 2, -4)
+	//color, initial starting position on the y axis [x], positon on board[x,z]
+	//Cone(1,1,ORANGE, 0, 2, -4),
+	Cone(2,2,ORANGE, 10, 27.5, 4.2),
+	Cone(2,2,ORANGE, 10, 33, 4.2),
+	Cone(1,1,YELLOW,0,2,20),
+	Cone(1,1,YELLOW,0,3.5,20),
+	Cone(1,1,YELLOW,0,5,20),
+	Cone(1,1,YELLOW,0,6.5,20),
+	Cone(1,1,YELLOW,0,8,20),
+	Cone(1,1,YELLOW,0,9.5,20),
+	Cone(1,1,YELLOW,0,11,20),
+	Cone(1,1,YELLOW,0,12.5,20),
+	Cone(1,1,YELLOW,0,14,20),
+	Cone(1,1,YELLOW,0,15.5,20),
+	/*Cone(1,1,YELLOW,0,17,20),
+	Cone(1,1,YELLOW,0,18.5,20),*/
+	Cone(1,1,YELLOW,0,20,20),
+	/*Cone(1,1,YELLOW,0,21.5,20),
+	Cone(1,1,YELLOW,0,23,20),*/
+	Cone(1,1,YELLOW,0,24.5,20),
+	Cone(1,1,YELLOW,0,26,20),
+	Cone(1,1,YELLOW,0,27.5,20),
+	Cone(1,1,YELLOW,0,29,20),
+	Cone(1,1,YELLOW,0,30.5,20),
+	Cone(1,1,YELLOW,0,32,20),
+	Cone(1,1,YELLOW,0,33.5,20),
+	Cone(1,1,YELLOW,0,35,20),
+	Cone(1,1,YELLOW,0,36.5,20),
+	Cone(1,1,YELLOW,0,38,20),
+
+
+	Cone(1,1,YELLOW,0,20,1),
+	Cone(1,1,YELLOW,0,20,2.5),
+	Cone(1,1,YELLOW,0,20,4),
+	Cone(1,1,YELLOW,0,20,5.5),
+	Cone(1,1,YELLOW,0,20,7),
+	Cone(1,1,YELLOW,0,20,8.5),
+	Cone(1,1,YELLOW,0,20,10),
+	Cone(1,1,YELLOW,0,20,11.5),
+	Cone(1,1,YELLOW,0,20,13),
+	Cone(1,1,YELLOW,0,20,14.5),
+	/*Cone(1,1,YELLOW,0,20,16),
+	Cone(1,1,YELLOW,0,20,17.5),
+	Cone(1,1,YELLOW,0,20,19),
+	Cone(1,1,YELLOW,0,20,20.5),
+	Cone(1,1,YELLOW,0,20,22),
+	Cone(1,1,YELLOW,0,20,23.5),*/
+	Cone(1,1,YELLOW,0,20,25),
+	Cone(1,1,YELLOW,0,20,26.5),
+	Cone(1,1,YELLOW,0,20,28),
+	Cone(1,1,YELLOW,0,20,29.5),
+	Cone(1,1,YELLOW,0,20,31),
+	Cone(1,1,YELLOW,0,20,32.5),
+	Cone(1,1,YELLOW,0,20,34),
+	Cone(1,1,YELLOW,0,20,35.5),
+	Cone(1,1,YELLOW,0,20,37)
 };
-*/
+
 Rect rect[] = {
 	//width, height, depth, color, initial starting position on the y axis [x], positon on board[x,z] 
-	Rect(8,12,6,RED, 1.5/2, 5, 36),
+	Rect(8,12,6,RED, 1.5 / 2, 5, 36),
 	Rect(2,1,1,YELLOW, 1.5 / 2, 12, 36),
 	Rect(2,1,1,YELLOW, 1.5 / 2, 11.9, 37.2),
-	Rect(2,0.6,1,YELLOW, 1.2, 11.95, 36.8)
+	Rect(2,0.6,1,YELLOW, 1.2, 11.95, 36.8),
+	Rect(10,12,6,WHITE, 4, 30, 4),
+	Rect(8,3,4,SILVER, 2, 30,30),
+	Rect(3,3,2,ORANGE,1,38,30),
+	Rect(6,2,2,YELLOW,1,35,36),
+
+	Rect(2,1,6,RED,4,32,12),
+	Rect(6,1,2,RED,4,32,12),
+
+	Rect(0.3,2,0.5, RED,6.2,5,32.8), /////////
+	Rect(4,4,2, WHITE,2.5,5,33.85),
+	Rect(0.2,4,2, RED,2.5,5,33.5),
+	Rect(4,0.2,2, YELLOW,4.5,5,33.5),
+	Rect(6,0.2,2, YELLOW,8.5,5,33.7),
+
+	Rect(0.2,12,1, YELLOW,2,2,0.5),
+	Rect(0.2,12,1, YELLOW,2,12.5,0.5),
+	Rect(10.5,0.2,1, YELLOW,8,7.25,0.5),
+
+	Rect(10.5,1,1,CYAN, 8.5, 30, 4),
+	Rect(10.5,1,1,CYAN, 8.5, 30, 2),
+	Rect(10.5,1,1,CYAN, 8.5, 30, 6),
+
+	Rect(10.5,1,1,CYAN, 6.5, 30, 4),
+	Rect(10.5,1,1,CYAN, 6.5, 30, 2),
+	Rect(10.5,1,1,CYAN, 6.5, 30, 6),
+
+	Rect(10.5,1,1,CYAN, 4.5, 30, 4),
+	Rect(10.5,1,1,CYAN, 4.5, 30, 2),
+	Rect(10.5,1,1,CYAN, 4.5, 30, 6),
 };
 
 
@@ -117,6 +206,14 @@ void init() {
 	glMaterialf(GL_FRONT, GL_SHININESS, 30);
 
 	plane.create();
+
+	std::cout << "Hola :D" << std::endl;
+	std::cout << "INSTRUCTIONS" << std::endl;
+	std::cout << "Press arrow keys to move" << std::endl;
+	std::cout << "Press 'SPACEBAR' to toggle in between cameras" << std::endl;
+	std::cout << "Press 'z' to zoom out certain cameras and press 'x' to zoom them in" << std::endl;
+	std::cout << "Press 'n' to toggle between lighting and no lighting" << std::endl;
+	std::cout << "Press 'o' and 'p' to change the orbit of the two spheres " << std::endl;
 }
 
 void display() {
@@ -132,7 +229,7 @@ void display() {
 		gluLookAt(camera.getX(), camera.getY(), camera.getZ(), plane.centerx(), 0.0, plane.centerz(), 0.0, 1.0, 0.0);
 	}
 	if (choice == 2) { //Eagle eye
-		gluLookAt(x, 75.0f, z, x + lx, 1.0f, z + lz, 0.0f,1.0f, 0.0f);
+		gluLookAt(x, 75.0f, z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
 	}
 	if (choice == 3) { //Poke out
 		gluLookAt(camera.getX(), camera.getY(), camera.getZ(), x + lx, 1.0f, z + lz, 1.0f, 1.0f, 1.0f);
@@ -160,14 +257,14 @@ void display() {
 	for (int i = 0; i < sizeof cylinder / sizeof(Cylinder); i++) {
 		cylinder[i].update();
 	}
-	/*
-	for (int i = 0; i < sizeof pyramid / sizeof(Pyramid); i++) {
+	
+	/*for (int i = 0; i < sizeof pyramid / sizeof(Pyramid); i++) {
 		pyramid[i].update();
-	}
+	}*/
 	for (int i = 0; i < sizeof cone / sizeof(Cone); i++) {
 		cone[i].update();
 	}
-	*/
+
 	for (int i = 0; i < sizeof rect / sizeof(Rect); i++) {
 		rect[i].update();
 	}
