@@ -63,16 +63,19 @@ Cube cube[] = {
   Cube(14.9, ORANGE,  -6.93, 7.5, 7.5),
   Cube(2,BLACK,5,7.5,0),
   Cube(40, BLACK,-19.5,20,20),
-  Cube(15, BROWN,-6.8,8,32)
+  Cube(15, BROWN,-6.93,8,32),
+  Cube(15, WHITE,-6.93,32,32),
+  Cube(15, GREEN,-6.93,32,8)
   //
 };
 
 Cylinder cylinder[] = {
 	//radius, size, color, initial starting position on the y axis [x], positon on board[x,z]
   Cylinder(0.8, 15, YELLOW, 0, 14.9, 0),
-  Cylinder(0.8, 15, BROWN, 0, 0, 0),
-  Cylinder(10, 0.4, RED, 0, 7.5, 0.1)
+  Cylinder(0.8, 15, YELLOW, 0, 0, 0),
+  Cylinder(10, 0.4, RED, 0, 7.5, 0.1),
   //
+  Cylinder(4, 5.5, RED, 6, 5, 33.2)
 };
 
 //======Down facing torus=====
@@ -102,7 +105,10 @@ Cone cone[] = {
 */
 Rect rect[] = {
 	//width, height, depth, color, initial starting position on the y axis [x], positon on board[x,z] 
-	Rect(8,12,6,RED, 1.5/2, 5, 36)
+	Rect(8,12,6,RED, 1.5/2, 5, 36),
+	Rect(2,1,1,YELLOW, 1.5 / 2, 12, 36),
+	Rect(2,1,1,YELLOW, 1.5 / 2, 11.9, 37.2),
+	Rect(2,0.6,1,YELLOW, 1.2, 11.95, 36.8)
 };
 
 
