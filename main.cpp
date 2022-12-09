@@ -7,25 +7,14 @@
 #include "shader.h"
 #include "shaderprogram.h"
 
-#include <vector> 
-#include <math.h> 
+#include <vector>
+#include <math.h>
+
+#include "Objects.h"
 
 int choice = 1;
 int night = 0;
-int a = 20;
 
-// Colors
-GLfloat WHITE[] = { 1, 1, 1 };
-GLfloat GREY[] = { 0.5, 0.5, 0.5 };
-GLfloat BLACK[] = { 0, 0, 0 };
-GLfloat YELLOW[] = { 1, 1, 0 };
-GLfloat CYAN[] = { 0, 1, 1 };
-GLfloat RED[] = { 1, 0, 0 };
-GLfloat GREEN[] = { 0, 1, 0 };
-GLfloat MAGENTA[] = { 1, 0, 1 };
-GLfloat ORANGE[] = { 1, 0.5, 0 };
-GLfloat SILVER[] = { 0.90, 0.91, 0.98 };
-GLfloat BROWN[] = { 0.5, 0.35, 0.05 };
 
 // actual vector representing the camera's direction
 float lx = 0.0f, lz = -1.0f;
@@ -33,7 +22,6 @@ float lx = 0.0f, lz = -1.0f;
 float x = 2.0f, z = 5.0f;
 // all variables initialized to 1.0, meaning
 float angle = 0.0f;
-
 
 void changeSize(int w, int h)
 {
@@ -56,241 +44,72 @@ void changeSize(int w, int h)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-class Camera {
-	double theta;      // determines the x and z positions
-	double y;          // the current y axis position
-	double dTheta;     // increment in theta for moving the camera
-	double dy;         // increment in y 
-public:
-	Camera() : theta(0), y(3), dTheta(0.04), dy(0.2) {} //The starting position of the camera
-	double getX() { return 10 * cos(theta); } //Bounds of the camera
-	double getY() { return y; }
-	double getZ() { return 10 * sin(theta); }
-	void moveRight() { theta += dTheta; } //Camera movement
-	void moveLeft() { theta -= dTheta; }
-	void moveUp() { y += dy; }
-	void moveDown() { if (y > dy) y -= dy; }
-};
 
-class Camera2 {
-	double theta;      // determines the x and z positions
-	double y;          // the current y axis position
-	double dTheta;     // increment in theta for moving the camera
-	double dy;         // increment in y 
-public:
-	Camera2() : theta(0), y(3), dTheta(0.04), dy(0.2) {} //The starting position of the camera
-	double getX() { return 10 * cos(theta); } //Bounds of the camera
-	double getY() { return y; }
-	double getZ() { return 10 * sin(theta); }
-	void moveRight() { theta += dTheta; } //Camera movement
-	void moveLeft() { theta -= dTheta; }
-	void moveUp() { y += dy; }
-	void moveDown() { if (y > dy) y -= dy; }
-};
-
-class Sphere {
-	double radius; // Defines the radius
-	GLfloat* color; //Dynamically assigns the color
-	double maximumHeight; //Defines the maximum height
-	double x; //x
-	double y; //y
-	double z; //z
-	int direction; // direction
-public:
-	Sphere(double r, GLfloat* c, double h, double x, double z) : //constructor
-		radius(r), color(c), maximumHeight(h), direction(-1), y(h), x(x), z(z) {
-	}
-
-	void update() {
-		y += direction * 0.005;
-		if (y > maximumHeight) {
-			y = maximumHeight; direction = -1;
-		}
-		else if (y < radius) {
-			y = radius; direction = 1;
-		}
-		glPushMatrix();
-		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
-		glTranslated(x, y, z);
-		glutSolidSphere(radius, 30, 30);
-		glPopMatrix();
-	}
-
-	~Sphere() {}; //destructor
-
-};
-
-class Torus {
-	double radius; // Defines the radius
-	double r;
-	GLfloat* color; //Dynamically assigns the color
-	double maximumHeight; //Defines the maximum height
-	double x; //x
-	double y; //y
-	double z; //z
-	int direction; // direction
-public:
-	Torus(double r, double R, GLfloat* c, double h, double x, double z) : //constructor
-		radius(r), r(R), color(c), maximumHeight(h), direction(-1), y(h), x(x), z(z) {
-	}
-
-	void update() {
-		//y += direction * 0.005;
-		//if (y > maximumHeight) {
-		//	y = maximumHeight; //direction = -1;
-		//}
-		//else if (y < radius) {
-		//	y = radius; direction = 1;
-		//}
-		glPushMatrix();
-		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
-		glTranslated(x, y, z);
-		glutSolidTorus(radius, r, 30, 30);
-		glPopMatrix();
-	}
-
-	~Torus() {}; //destructor
-
-};
-
-#define red {0xff, 0x00, 0x00}
-#define yellow {0xff, 0xff, 0x00}
-#define magenta {0xff, 0, 0xff}
-GLubyte texture[][3] = {
-	red, yellow,
-	yellow, red,
-};
-
-// Cube Class
-class Cube {
-	double leSize; // Defines the radius
-	GLfloat* color; //Dynamically assigns the color
-	double maximumHeight; //Defines the maximum height
-	double x; //x
-	double y; //y
-	double z; //z
-	int direction; // direction
-public:
-	Cube(double s, GLfloat* c, double h, double x, double z) :
-		leSize(s), color(c), maximumHeight(h), direction(-1), y(h), x(x), z(z) {
-	}
-
-	void update() {
-
-		glPushMatrix();
-		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
-		//glColor3ub(color[0], color[1], color[2]);
-		glTranslated(x, y, z);
-		glutSolidCube(leSize);
-
-		glPopMatrix();
-
-	}
-
-	~Cube() {};
-
-};
-
-class Cylinder {
-	double radius;
-	double leSize; // Defines the radius
-	GLfloat* color; //Dynamically assigns the color
-	double maximumHeight; //Defines the maximum height
-	double x; //x
-	double y; //y
-	double z; //z
-	int direction; // direction
-public:
-	Cylinder(double r, double s, GLfloat* c, double h, double x, double z) :
-		radius(r), leSize(s), color(c), maximumHeight(h), direction(-1), y(h), x(x), z(z) {
-	}
-
-	void update() {
-
-		glPushMatrix();
-		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
-		//glColor3ub(color[0], color[1], color[2]);
-		glTranslated(x, y, z);
-		glutSolidCylinder(radius, leSize, 30, 30);
-
-		glPopMatrix();
-
-	}
-
-	~Cylinder() {};
-
-};
-
-// Plane class
-class Plane {
-	int displayListId;
-	int width;
-	int depth;
-public:
-	Plane(int width, int depth) : width(width), depth(depth) {} //Planes parameters
-	double centerx() { return width / 2; } //Cameras focus point [Where the camera fixates to]
-	double centerz() { return depth / 2; }
-	void create() {
-		displayListId = glGenLists(1);
-		glNewList(displayListId, GL_COMPILE);
-		GLfloat lightPosition[] = { 4, 3, 7, 1 };
-		glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-
-		glBegin(GL_QUADS);
-		glNormal3d(0, 1, 0); //Shader of plane
-		for (int x = 0; x < width - 1; x++) {
-			for (int z = 0; z < depth - 1; z++) { //Dimensions of the plane [Plane gets weird if parameters are changed here]
-				glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, SILVER); //Color of plane
-				glVertex3d(x, 0, z);
-				glVertex3d(x + 1, 0, z);
-				glVertex3d(x + 1, 0, z + 1);
-				glVertex3d(x, 0, z + 1);
-			}
-		}
-		glEnd();
-		glEndList();
-	}
-	void draw() {
-		glCallList(displayListId);
-	}
-};
-
-
-
-Plane plane(40, 40);
+//Plane plane(bounds, bounds);
+Plane plane(20, 20);
 
 Camera camera;
-Camera2 camera2;
 
 Sphere sphere[] = {
 	//radius, color, initial starting position on the y axis [x], positon on board[x,z]
-   Sphere(0.25, ORANGE, 5, 7.5, 7.5),
-   Sphere(0.25, BLACK, 5, 7.5, 7.5)
+   Sphere(0.3, ORANGE, 6, 7.5, 1.5)
+   //Sphere(0.3, BLACK, 5, 7.5, 7.5)
 };
 
 Cube cube[] = {
 	//size, initial starting position on the y axis [x], positon on board[x,z]
   Cube(2, BLACK,  -0.9, 7.5, 7.5),
-  Cube(15, ORANGE,  -6.8, 7.5, 7.5),
+  Cube(14.9, ORANGE,  -6.93, 7.5, 7.5),
   Cube(2,BLACK,5,7.5,0),
   Cube(40, BLACK,-19.5,20,20),
-  Cube(15, BROWN,-6.8,8,32),
-  Cube(15,WHITE,-6.8,32,8),
-  Cube(15,WHITE,-6.8,32,32)
-
+  Cube(15, BROWN,-6.93,8,32),
+  Cube(15, WHITE,-6.93,32,32),
+  Cube(15, GREEN,-6.93,32,8)
+  //
 };
 
 Cylinder cylinder[] = {
 	//radius, size, color, initial starting position on the y axis [x], positon on board[x,z]
   Cylinder(0.8, 15, YELLOW, 0, 14.9, 0),
-  Cylinder(0.8, 15, BROWN, 0, 0, 0),
-  Cylinder(10, 0.4, RED, 0, 7.5, 0)
+  Cylinder(0.8, 15, YELLOW, 0, 0, 0),
+  Cylinder(10, 0.4, RED, 0, 7.5, 0.1),
+  //
+  Cylinder(4, 5.5, RED, 6, 5, 33.2)
 };
 
+//======Down facing torus=====
 Torus torus[] = {
 	//radius 1, radius 2, color, initial starting position on the y axis [x], positon on board[x,z]
-   Torus(0.2, 1, GREY, 5, 7.5, 1)
+   Torus(0.15, 0.8, GREY, 4.5, 7.5, 1.5)
+   //
 };
+
+//=======Front facing torus=====
+Torus2 torus2[] = {
+	//radius 1, radius 2, color, initial starting position on the y axis [x], positon on board[x,z]
+   Torus2(0.2, .5, WHITE, 5.2, 7.5, .82)
+   //
+};
+
+/*
+Pyramid pyramid[] = {
+	//color, initial starting position on the y axis [x], positon on board[x,z]
+	Pyramid(YELLOW, 0, 2, 4)
+};
+Cone cone[] = {
+	//color, initial starting position on the y axis [x], positon on board[x,z]
+	Cone(1,1,ORANGE, 0, 2, -4)
+};
+*/
+Rect rect[] = {
+	//width, height, depth, color, initial starting position on the y axis [x], positon on board[x,z] 
+	Rect(8,12,6,RED, 1.5 / 2, 5, 36),
+	Rect(2,1,1,YELLOW, 1.5 / 2, 12, 36),
+	Rect(2,1,1,YELLOW, 1.5 / 2, 11.9, 37.2),
+	Rect(2,0.6,1,YELLOW, 1.2, 11.95, 36.8)
+};
+
+
 
 void init() {
 
@@ -309,6 +128,12 @@ void init() {
 	plane.create();
 }
 
+float angle2 = 0.0f;
+float lx2 = 0.788119f, ly2 = 2.02862e-32f, lz2 = -1.2804f;
+// XZ position of the camera
+float x2 = 39.4179f, y2 = 3.19189f, z2 = 12.7503f;
+
+
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -316,15 +141,16 @@ void display() {
 
 	// Set the camera
 	if (choice == 0) {
-		gluLookAt(x, 1.0f, z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
+		// First person
+		std::cout << "x2: " << x2 << ", y2: " << y2 << ", z2: " << z2 << std::endl;
+		std::cout << "lx2: " << lx2 << ", ly2: " << ly2 << ", lz2: " << lz2 << std::endl;
+		gluLookAt(x2, y2, z2, lx2, ly2, lz2, 0.0f, 1.0f, 0.0f);
 	}
 	if (choice == 1) {
 		gluLookAt(camera.getX(), camera.getY(), camera.getZ(), plane.centerx(), 0.0, plane.centerz(), 0.0, 1.0, 0.0);
 	}
 	if (choice == 2) {
-		// Camera 2 
-		// gluLookAt(x, 75.0f, z, x + lx, 1.0f, z + lz, 1.0f, 1.0f, 1.0f);
-		gluLookAt(camera2.getX(), camera2.getY(), camera2.getZ(), x + lx, 1.0f, z + lz, 1.0f, 1.0f, 1.0f);
+		gluLookAt(x, 75.0f, z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
 	}
 
 	// Draw ground
@@ -334,15 +160,30 @@ void display() {
 	for (int i = 0; i < sizeof sphere / sizeof(Sphere); i++) {
 		sphere[i].update();
 	}
+	for (int i = 0; i < sizeof torus / sizeof(Torus); i++) {
+		torus[i].update();
+	}
+	for (int i = 0; i < sizeof torus2 / sizeof(Torus2); i++) {
+		torus2[i].update();
+	}
 	for (int i = 0; i < sizeof cube / sizeof(Cube); i++) {
 		cube[i].update();
 	}
 	for (int i = 0; i < sizeof cylinder / sizeof(Cylinder); i++) {
 		cylinder[i].update();
 	}
-	for (int i = 0; i < sizeof torus / sizeof(Torus); i++) {
-		torus[i].update();
+	/*
+	for (int i = 0; i < sizeof pyramid / sizeof(Pyramid); i++) {
+		pyramid[i].update();
 	}
+	for (int i = 0; i < sizeof cone / sizeof(Cone); i++) {
+		cone[i].update();
+	}
+	*/
+	for (int i = 0; i < sizeof rect / sizeof(Rect); i++) {
+		rect[i].update();
+	}
+
 
 	glFlush();
 	glutSwapBuffers();
@@ -362,7 +203,6 @@ void timer(int v) {
 }
 
 
-
 void special(int key, int, int) {
 	switch (key) {
 	case GLUT_KEY_RIGHT: camera.moveLeft(); break;
@@ -380,26 +220,65 @@ void processSpecialKeys(int key, int xx, int yy)
 
 	float fraction = 0.1f;
 
-	
-	switch (key) {
-	case GLUT_KEY_LEFT:
-		angle -= 0.05f;
-		lx = sin(angle);
-		lz = -cos(angle);
-		break;
-	case GLUT_KEY_RIGHT:
-		angle += 0.05f;
-		lx = sin(angle);
-		lz = -cos(angle);
-		break;
-	case GLUT_KEY_UP:
-		x += lx * fraction;
-		z += lz * fraction;
-		break;
-	case GLUT_KEY_DOWN:
-		x -= lx * fraction;
-		z -= lz * fraction;
-		break;
+	if (choice != 0)
+	{
+		switch (key) {
+		case GLUT_KEY_LEFT:
+			angle -= 0.05f;
+			lx = sin(angle);
+			lz = -cos(angle);
+			break;
+		case GLUT_KEY_RIGHT:
+			angle += 0.05f;
+			lx = sin(angle);
+			lz = -cos(angle);
+			break;
+		case GLUT_KEY_UP:
+			x += lx * fraction;
+			z += lz * fraction;
+			break;
+		case GLUT_KEY_DOWN:
+			x -= lx * fraction;
+			z -= lz * fraction;
+			break;
+		}
+	}
+	else
+	{
+		switch (key) {
+		case GLUT_KEY_LEFT:
+			//angle -= 0.05f;
+			//lx = sin(angle);
+			//lz = -cos(angle);
+			x2 -= lx2 * fraction;
+			y2 -= ly2 * fraction;
+			z2 -= lz2 * fraction;
+			break;
+		case GLUT_KEY_RIGHT:
+			angle2 += 0.05f;
+			//lx = sin(angle);
+			//lz = -cos(angle);
+			x2 += lx2 * fraction;
+			y2 += ly2 * fraction;
+			z2 += lz2 * fraction;
+			break;
+		case GLUT_KEY_UP:
+			angle2 += 0.05f;
+			lx2 = sin(angle2);
+			ly2 += ly2 * .5;
+			lz2 = tan(angle2);
+			//x += lx * fraction;
+			//z += lz * fraction;
+			break;
+		case GLUT_KEY_DOWN:
+			angle2 -= 0.05f;
+			lx2 = sin(angle2);
+			ly2 -= ly2 * .5;
+			lz2 = tan(angle2);
+			//x -= lx * fraction;
+			//z -= lz * fraction;
+			break;
+		}
 	}
 }
 
@@ -426,28 +305,20 @@ void keyboard_func(unsigned char key, int xx, int yy)
 	{
 		if (choice == 0) {
 			choice++;
-			std::cout << "choice: " << choice << "\n";
 			glutReshapeFunc(reshape);
-			glutSpecialFunc(processSpecialKeys);
 			glutSpecialFunc(special);
-			choice++;
 			break;
 		}
 
 		if (choice == 1) {
 			choice++;
-			std::cout << "choice: " << choice << "\n";
-			glutReshapeFunc(reshape);
 			glutSpecialFunc(processSpecialKeys);
-			
 			break;
 		}
 		if (choice == 2) {
 			choice = 0;
-			std::cout << "choice: " << choice << "\n";
 			glutReshapeFunc(reshape);
 			glutSpecialFunc(processSpecialKeys);
-			//choice = 0;
 			break;
 		}
 	}
@@ -464,6 +335,17 @@ void keyboard_func(unsigned char key, int xx, int yy)
 			night = 0;
 			break;
 		}
+	}
+
+	case 'z':
+	{
+		bounds++;
+		break;
+	}
+	case 'x':
+	{
+		bounds--;
+		break;
 	}
 
 	}
