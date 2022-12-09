@@ -24,6 +24,7 @@ GLfloat GREEN[] = { 0, 1, 0 };
 GLfloat MAGENTA[] = { 1, 0, 1 };
 GLfloat ORANGE[] = { 1, 0.5, 0 };
 GLfloat SILVER[] = { 0.90, 0.91, 0.98 };
+GLfloat BROWN[] = { 0.5, 0.35, 0.05 };
 
 // actual vector representing the camera's direction
 float lx = 0.0f, lz = -1.0f;
@@ -100,6 +101,14 @@ public:
 
 	~Sphere() {}; //destructor
 
+};
+
+#define red {0xff, 0x00, 0x00}
+#define yellow {0xff, 0xff, 0x00}
+#define magenta {0xff, 0, 0xff}
+GLubyte texture[][3] = {
+	red, yellow,
+	yellow, red,
 };
 
 // Cube Class
@@ -204,13 +213,14 @@ Camera camera;
 
 Sphere sphere[] = {
 	//radius, color, initial starting position on the y axis [x], positon on board[x,z]
-   Sphere(1, GREEN, 10, 6, 1),
-   Sphere(0.4, CYAN, 0.4, 1, 7)
+   Sphere(1, WHITE, 10, 6, 1),
+   Sphere(0.4, BLACK, 0.4, 1, 7),
+   Sphere(0.2,SILVER,5,1, 5)
 };
 
 Cube cube[] = {
 	//size, initial starting position on the y axis [x], positon on board[x,z]
-  Cube(1.5, MAGENTA, 1.5 / 2, 3, 4),
+  Cube(1.5, BROWN, 1.5 / 2, 3, 4),
   Cube(2, ORANGE, 10, 6, 1),
   Cube(2, ORANGE,  -0.9, 6, 1)
 };
@@ -248,6 +258,9 @@ void display() {
 	}
 	if (choice == 1) {
 		gluLookAt(camera.getX(), camera.getY(), camera.getZ(), plane.centerx(), 0.0, plane.centerz(), 0.0, 1.0, 0.0);
+	}
+	if (choice == 2) {
+		gluLookAt(x, 10.0f, z, x + lx, 1.0f, z + lz, 0.0f,1.0f, 0.0f);
 	}
 
 	// Draw ground
@@ -346,12 +359,20 @@ void keyboard_func(unsigned char key, int xx, int yy)
 		if (choice == 0) {
 			choice++;
 			glutReshapeFunc(reshape);
+			glutSpecialFunc(processSpecialKeys);
 			glutSpecialFunc(special);
 			break;
 		}
 
 		if (choice == 1) {
+			choice++;
+			glutReshapeFunc(reshape);
+			glutSpecialFunc(processSpecialKeys);
+			break;
+		}
+		if (choice == 2) {
 			choice = 0;
+			glutReshapeFunc(reshape);
 			glutSpecialFunc(processSpecialKeys);
 			break;
 		}
