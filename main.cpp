@@ -46,7 +46,9 @@ Sphere sphere[] = {
    Sphere(0.3, BLACK, 2, 4, 9),
    Sphere(0.3, CYAN, 5, 8, 3),
    Sphere(0.3, MAGENTA, 4, 8, 10),
-   Sphere(0.4, MAGENTA, 0.4, 38, 28),
+
+   Sphere(0.4, GREY, 0.4, 38, 28),
+   Sphere(0.4, GREY, 0.4, 34, 32),
    //Sphere(0.3, BLACK, 5, 7.5, 7.5)
 };
 
@@ -62,6 +64,10 @@ Cube cube[] = {
   //
   Cube(2, WHITE,6.2,5,33.85),/////////
   Cube(1.5, RED,6.2,5,33.5), /////////
+
+  Cube(1.5, RED,6.2,33,33.5),
+  Cube(1.5, BROWN,3.2,34,37),
+  Cube(1.5, WHITE,6.2,30,30),
 };
 
 Cylinder cylinder[] = {
@@ -208,7 +214,7 @@ void init() {
 
 	plane.create();
 
-	std::cout << "Hola :D" << std::endl;
+	std::cout << "Hola :D\n" << std::endl;
 	std::cout << "INSTRUCTIONS" << std::endl;
 	std::cout << "Press arrow keys to move" << std::endl;
 	std::cout << "Press 'SPACEBAR' to toggle in between cameras" << std::endl;
@@ -331,10 +337,10 @@ void processSpecialKeys(int key, int xx, int yy)
 	{
 		switch (key) {
 		case GLUT_KEY_LEFT:
-			//angle -= 0.05f;
+			angle -= 0.05f;
 			//lx = sin(angle);
 			//lz = -cos(angle);
-			x2 -= lx2 * fraction;
+			x2 -= lx2 * fraction *20;
 			y2 -= ly2 * fraction;
 			z2 -= lz2 * fraction;
 			break;
@@ -342,14 +348,14 @@ void processSpecialKeys(int key, int xx, int yy)
 			angle2 += 0.05f;
 			//lx = sin(angle);
 			//lz = -cos(angle);
-			x2 += lx2 * fraction;
+			x2 += lx2 * fraction *20;
 			y2 += ly2 * fraction;
 			z2 += lz2 * fraction;
 			break;
 		case GLUT_KEY_UP:
 			angle2 += 0.05f;
 			lx2 = sin(angle2);
-			ly2 += ly2 * .5;
+			ly2 += ly2 * .0005;
 			lz2 = tan(angle2);
 			//x += lx * fraction;
 			//z += lz * fraction;
@@ -357,7 +363,7 @@ void processSpecialKeys(int key, int xx, int yy)
 		case GLUT_KEY_DOWN:
 			angle2 -= 0.05f;
 			lx2 = sin(angle2);
-			ly2 -= ly2 * .5;
+			ly2 += ly2 * .0005;
 			lz2 = tan(angle2);
 			//x -= lx * fraction;
 			//z -= lz * fraction;
